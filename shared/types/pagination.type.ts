@@ -4,3 +4,9 @@ export const paginationTypeDef = `
     limit: Int
   }
 `;
+
+export interface PaginationOptions {
+  page?: number;
+  limit?: number;
+}
+

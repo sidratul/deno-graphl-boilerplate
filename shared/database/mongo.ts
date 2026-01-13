@@ -11,7 +11,11 @@ export async function connectToDatabase() {
     await mongoose.connect(mongoUri);
     console.log("Successfully connected to MongoDB.");
   } catch (error) {
-    console.error("Error connecting to MongoDB:", error);
+    if (error instanceof Error) {
+      console.error("Error connecting to MongoDB:", error.message);
+    } else {
+      console.error("An unknown error occurred while connecting to MongoDB:", error);
+    }
     Deno.exit(1);
   }
 }

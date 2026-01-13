@@ -1,7 +1,11 @@
 {
   "tasks": {
-    "start": "deno run --allow-net --allow-env --allow-read --env main.ts",
-    "g": "deno run -A scripts/scaffold.ts"
+    "start": "deno run --allow-net --allow-env --allow-read --allow-sys --env main.ts",
+    "g": "deno run -A scripts/scaffold.ts",
+    "lint": "deno lint",
+    "fmt": "deno fmt",
+    "test": "deno test -A"
   },
+  "nodeModulesDir": "auto",
   "importMap": "./import_map.json"
 }

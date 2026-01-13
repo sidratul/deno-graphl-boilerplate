@@ -1,5 +1,4 @@
-// In a real app, you would import the User type
-// import { User } from "@/user/user.d.ts";
+import { AuthDoc } from "@/auth/auth.d.ts";
 
 /**
  * The context that will be available in all resolvers.
@@ -7,6 +6,10 @@
  * In a real app, you would typically populate the user property
  * in the context creation logic based on a JWT or session.
  */
-export interface AppContext {
-  // user?: User;
+export class AppContext {
+  user?: AuthDoc;
+
+  constructor(user?: AuthDoc) {
+    this.user = user;
+  }
 }

@@ -61,12 +61,47 @@ async function scaffold() {
       }
     }
     console.log(`\nModule "${moduleNamePascal}" created successfully in 'src/'!`);
-    console.log("Don't forget to import the new typedefs and resolvers in your main.ts file.");
+    
+    // Automatically update main.ts
+    await updateMainTs(moduleNameLower, moduleNamePascal);
 
   } catch (error) {
-    console.error("An error occurred:", error);
+    if (error instanceof Error) {
+      console.error("An error occurred:", error.message);
+    } else {
+      console.error("An unknown error occurred:", error);
+    }
     Deno.exit(1);
   }
+}
+
+async function updateMainTs(moduleNameLower: string, moduleNamePascal: string) {
+  const mainTsPath = resolve("./main.ts");
+  let mainTsContent = await Deno.readTextFile(mainTsPath);
+
+  // Add imports
+  const importResolvers = `import { resolvers as ${moduleNamePascal}Resolvers } from "@/${moduleNameLower}/${moduleNameLower}.resolver.ts";`;
+  const importTypeDefs = `import { typeDefs as ${moduleNamePascal}TypeDefs } from "@/${moduleNameLower}/${moduleNameLower}.typedef.ts";`;
+  
+  mainTsContent = mainTsContent.replace(
+    "// SCAFFOLD_IMPORT",
+    `${importResolvers}\n${importTypeDefs}\n// SCAFFOLD_IMPORT`
+  );
+
+  // Add to resolvers array
+  mainTsContent = mainTsContent.replace(
+    "// SCAFFOLD_RESOLVER",
+    `${moduleNamePascal}Resolvers,\n    // SCAFFOLD_RESOLVER`
+  );
+
+  // Add to typeDefs array
+  mainTsContent = mainTsContent.replace(
+    "// SCAFFOLD_TYPEDEF",
+    `${moduleNamePascal}TypeDefs,\n    // SCAFFOLD_TYPEDEF`
+  );
+
+  await Deno.writeTextFile(mainTsPath, mainTsContent);
+  console.log("Automatically updated main.ts with new module.");
 }
 
 scaffold();

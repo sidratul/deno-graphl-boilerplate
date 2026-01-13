@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+
+  deno-app:
+    build: .
+    container_name: deno-app
+    ports:
+      - "8000:8000"
+    environment:
+      PORT: 8000
+      MONGO_URI: mongodb://admin:password@mongo:27017/deno-graphql?authSource=admin
+      JWT_SECRET: your-secret-key
+    depends_on:
+      - mongo
+    restart: always
+
+volumes:
+  mongo-data:
