@@ -1,0 +1,13 @@
+{
+  "imports": {
+    "graphql": "npm:graphql@^16.8.1",
+    "@graphql-yoga/plugin-health-check": "npm:@graphql-yoga/plugin-health-check@^3",
+    "graphql-yoga": "npm:graphql-yoga@^5",
+    "mongoose": "npm:mongoose@8.4.0",
+    "zod": "npm:zod@^3.22.4",
+    "@graphql-tools/schema": "npm:@graphql-tools/schema@^10.0.0",
+    "https://deno.land/std@0.224.0/dotenv/load.ts": "https://deno.land/std@0.224.0/dotenv/load.ts",
+    "@/": "./src/",
+    "#shared/": "./shared/"
+  }
+}
