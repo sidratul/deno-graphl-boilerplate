@@ -1,12 +1,13 @@
 import { HydratedDocument } from "mongoose";
 import { ObjectId, SortOptions, PaginationOptions } from "#shared/index.ts";
+import { RoleType } from "#shared/enums/enum.ts";
 
 export interface Auth {
   _id: ObjectId;
   name: string;
   email: string;
   password: string;
-  role?: "USER" | "ADMIN"; // Add role property
+  role?: RoleType; // Add role property
   createdAt: Date;
   updatedAt: Date;
 }

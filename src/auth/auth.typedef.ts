@@ -1,4 +1,18 @@
 export const typeDefs = `
+  enum Role {
+    USER
+    ADMIN
+  }
+
+  type User {
+    id: ObjectId!
+    name: String!
+    email: String!
+    role: Role
+    createdAt: Date
+    updatedAt: Date
+  }
+
   type AuthResponse {
     token: String
   }
@@ -12,6 +26,10 @@ export const typeDefs = `
   input LoginInput {
     email: String!
     password: String!
+  }
+
+  extend type Query {
+    profile: User!
   }
 
   extend type Mutation {

@@ -14,6 +14,4 @@ export interface __NAME__Filter {
   search?: string;
 }
 
-export interface __NAME__QueryOptions extends __NAME__Filter, PaginationOptions {
-  sort?: SortOptions;
-}
+export interface __NAME__QueryOptions extends __NAME__Filter, PaginationOptions, SortOptions {}

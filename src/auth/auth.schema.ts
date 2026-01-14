@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { USER_ROLES } from "#shared/enums/enum.ts";
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -16,9 +17,14 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ["USER", "ADMIN"],
+    enum: USER_ROLES,
     default: "USER",
   },
+}, {
+  timestamps: true, // Automatically adds createdAt and updatedAt
 });
 
-export const User = mongoose.model("User", userSchema);
+const AuthModel = mongoose.model("User", userSchema);
+
+export default AuthModel;
+export { AuthModel as User };

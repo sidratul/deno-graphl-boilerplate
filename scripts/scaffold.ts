@@ -14,6 +14,19 @@ function toCamelCase(str:string): string {
     return str.charAt(0).toLowerCase() + str.slice(1);
 }
 
+// Helper function to check if a file exists
+async function fileExists(filePath: string): Promise<boolean> {
+  try {
+    const file = await Deno.stat(filePath);
+    return file.isFile;
+  } catch (error) {
+    if (error instanceof Deno.errors.NotFound) {
+      return false;
+    }
+    throw error;
+  }
+}
+
 async function scaffold() {
   const args = Deno.args;
   if (args.length < 1) {
@@ -33,6 +46,7 @@ async function scaffold() {
     __NAME_CAMEL__: moduleNameCamel,
     __NAME_LOWER__: moduleNameLower,
     __NAME_PLURAL__: moduleNamePlural,
+    __NAME_UPPER__: moduleNameLower.toUpperCase(),
   };
 
   const moduleDir = resolve(TARGET_DIR, moduleNameLower);
@@ -53,12 +67,35 @@ async function scaffold() {
 
         const newFileName = dirEntry.name.replace(".tpl", "");
         const finalFileName = `${moduleNameLower}.${newFileName}`;
-        
+
         const finalFilePath = resolve(moduleDir, finalFileName);
 
         await Deno.writeTextFile(finalFilePath, content);
         console.log(`Created file: ${finalFilePath}`);
       }
+    }
+
+    // Create enum and constant files separately
+    const enumTemplatePath = resolve(TEMPLATE_DIR, 'enum.ts.tpl');
+    if (await fileExists(enumTemplatePath)) {
+      let enumContent = await Deno.readTextFile(enumTemplatePath);
+      for (const [placeholder, value] of Object.entries(replacements)) {
+        enumContent = enumContent.replace(new RegExp(placeholder, "g"), value);
+      }
+      const enumFilePath = resolve(moduleDir, `${moduleNameLower}.enum.ts`);
+      await Deno.writeTextFile(enumFilePath, enumContent);
+      console.log(`Created file: ${enumFilePath}`);
+    }
+
+    const constantTemplatePath = resolve(TEMPLATE_DIR, 'constant.ts.tpl');
+    if (await fileExists(constantTemplatePath)) {
+      let constantContent = await Deno.readTextFile(constantTemplatePath);
+      for (const [placeholder, value] of Object.entries(replacements)) {
+        constantContent = constantContent.replace(new RegExp(placeholder, "g"), value);
+      }
+      const constantFilePath = resolve(moduleDir, `${moduleNameLower}.constant.ts`);
+      await Deno.writeTextFile(constantFilePath, constantContent);
+      console.log(`Created file: ${constantFilePath}`);
     }
     console.log(`\nModule "${moduleNamePascal}" created successfully in 'src/'!`);
     
